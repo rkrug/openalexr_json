@@ -1,0 +1,107 @@
+---
+title: "Example of using DuckDB to convert from JSON to Parquet"
+format: html
+---
+
+# Load needed packages
+```{r}
+#| label: setup
+
+
+library(httr)
+library(jsonlite)
+library(openalexR)
+
+## For doing the conversion
+library(DBI)
+library(duckdb)
+library(tibble)
+
+## Just for timing and other useful stuff in the report
+library(tictoc)
+library(knitr)
+
+list.files(
+  path = "R",
+  pattern = ".R$",
+  full.names = TRUE,
+  recursive = FALSE
+) |>
+  sapply(
+    FUN = source
+  )
+
+unlink(
+  "data",
+  recursive = TRUE,
+  force = TRUE
+)
+dir.create(
+  "data"
+)
+```
+
+## Set save function to dummy function
+```{r}
+#| label: set_save_function_dummy
+
+
+pages_save_function <- function(x, fn) {
+  NULL
+}
+```
+
+## Get the records as JSON files as returned from OpenAlex
+```{r}
+#| label: get_json
+
+
+tic()
+
+json_dir <- file.path("data", "json")
+dir.create(
+  json_dir,
+  recursive = TRUE
+)
+
+openalexR::oa_query(
+  entity = "works",
+  fulltext.search = "toast AND biodiversity"
+) |>
+  oa_request(
+    output_pages_to = "data",
+    pages_save_function = pages_save_function,
+    save_extension = ".json",
+    json_dir = json_dir
+  )
+toc()
+```
+
+# Convert them to parquet format
+```{r}
+#| label: convert_to_parquet
+
+
+tic()
+json_to_parquet(
+  json_dir = file.path("data", "json"),
+  arrow_dir = file.path("data", "data")
+)
+toc()
+```
+
+
+# Read as tibble
+```{r}
+#| label: read_as_tibble
+
+
+tic()
+x <- json_to_tibble(
+  json_dir = file.path("data", "json")
+)
+save(x, file = file.path("data", "x.rds"))
+toc()
+
+x
+```
