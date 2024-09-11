@@ -41,6 +41,10 @@ unlink(
 dir.create(
   "data"
 )
+
+# search_term <- 'toast AND biodiversity' # about 800 records
+# search_term <- '"deep sea" AND fishing AND illegal' # about 2500 records
+search_term <- '"deep sea" AND fishing' # about 18600 records
 ```
 
 ## Set save function to dummy function
@@ -68,7 +72,7 @@ dir.create(
 
 openalexR::oa_query(
   entity = "works",
-  fulltext.search = "toast AND biodiversity"
+  fulltext.search = search_term
 ) |>
   oa_request(
     output_pages_to = "data",
@@ -103,6 +107,24 @@ x <- json_to_tibble(
   json_dir = file.path("data", "json")
 )
 save(x, file = file.path("data", "x.rds"))
+toc()
+
+x
+```
+
+## Use `openalexR::oa_fetch()
+```{r}
+#| label: oa_fetch
+
+
+tic()
+
+x <- openalexR::oa_fetch(
+  entity = "works",
+  fulltext.search = search_term,
+  output = "tibble"
+)
+
 toc()
 
 x
