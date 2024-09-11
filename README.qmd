@@ -1,6 +1,8 @@
 ---
 title: "Example of using DuckDB to convert from JSON to Parquet"
-format: html
+format:
+  html:
+    embed-resources: true
 ---
 
 # Load needed packages
