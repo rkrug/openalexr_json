@@ -42,7 +42,7 @@ dir.create(
   "data"
 )
 
-# search_term <- 'toast AND biodiversity' # about 800 records
+# search_term <- "toast AND biodiversity" # about 800 records
 # search_term <- '"deep sea" AND fishing AND illegal' # about 2500 records
 search_term <- '"deep sea" AND fishing' # about 18600 records
 ```
@@ -55,6 +55,42 @@ search_term <- '"deep sea" AND fishing' # about 18600 records
 pages_save_function <- function(x, fn) {
   NULL
 }
+```
+
+
+## Run `openalexR::oa_fetch() first time aet caches
+```{r}
+#| label: oa_fetch_throw_away
+
+
+tic()
+
+x <- openalexR::oa_fetch(
+  entity = "works",
+  fulltext.search = search_term,
+  output = "tibble"
+)
+
+toc()
+```
+
+## Run `openalexR::oa_fetch() for timing
+```{r}
+#| label: oa_fetch
+
+
+tic()
+
+x <- openalexR::oa_fetch(
+  entity = "works",
+  fulltext.search = search_term,
+  output = "tibble"
+)
+
+toc()
+
+saveRDS(x, file = file.path("data", "data_from_fetch.rds"))
+x
 ```
 
 ## Get the records as JSON files as returned from OpenAlex
@@ -106,25 +142,7 @@ tic()
 x <- json_to_tibble(
   json_dir = file.path("data", "json")
 )
-save(x, file = file.path("data", "x.rds"))
-toc()
-
-x
-```
-
-## Use `openalexR::oa_fetch()
-```{r}
-#| label: oa_fetch
-
-
-tic()
-
-x <- openalexR::oa_fetch(
-  entity = "works",
-  fulltext.search = search_term,
-  output = "tibble"
-)
-
+save(x, file = file.path("data", "data_from_json.rds"))
 toc()
 
 x

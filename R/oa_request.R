@@ -58,7 +58,9 @@ oa_request <- function(
       Sys.sleep(1 / 100)
       query_ls[[paging]] <- next_page
       res <- api_request(query_url, ua, query = query_ls, json_dir = json_dir)
-      data <- c(data, res[[result_name]])
+      if (!is.null(json_dir)) {
+        data <- c(data, res[[result_name]])
+      }
       i <- i + 1
       next_page <- openalexR:::get_next_page("cursor", i, res)
     }
@@ -127,7 +129,9 @@ oa_request <- function(
       )
       result[[i]] <- fn
     } else {
-      if (!is.null(res$results)) data[[i]] <- res$results
+      if (!is.null(json_dir)) {
+        if (!is.null(res$results)) data[[i]] <- res$results
+      }
     }
   }
 
