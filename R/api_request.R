@@ -27,19 +27,23 @@ api_request <- function(
       stop("API did not return json", call. = FALSE)
     }
     if (!is.null(json_dir)) {
-      last_num <- list.files(
-        json_dir,
-        pattern = "*.json$",
-        recursive = FALSE,
-        full.names = FALSE
-      ) |>
-        basename() |>
-        gsub(
-          pattern = ".json|result_",
-          replacement = ""
+      suppressWarnings(
+        last_num <- list.files(
+          json_dir,
+          pattern = "*.json$",
+          recursive = FALSE,
+          full.names = FALSE
         ) |>
-        as.numeric() |>
-        max()
+          basename() |>
+          gsub(
+            pattern = ".json|result_",
+            replacement = ""
+          ) |>
+          as.numeric() |>
+          max(
+            na.rm = TRUE
+          )
+      )
 
       if (is.infinite(last_num)) {
         last_num <- 0
