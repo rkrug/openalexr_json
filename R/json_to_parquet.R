@@ -26,7 +26,7 @@ json_to_parquet <- function(
     "   SELECT ",
     "       UNNEST(results,  max_depth := 2) ",
     "   FROM ",
-    "       read_ndjson('", json_dir, "/*.json', maximum_object_size=1000000000)",
+    "       read_ndjson('", json_dir, "/*.json')",
     ") TO '", arrow_dir, "' ",
     "(FORMAT PARQUET, COMPRESSION SNAPPY, PARTITION_BY 'publication_year')"
   ) |>

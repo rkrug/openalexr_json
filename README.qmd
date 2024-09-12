@@ -9,14 +9,19 @@ format:
 ```{r}
 #| label: setup
 
-
 library(httr)
 library(jsonlite)
 library(openalexR)
 
 ## For doing the conversion
 library(DBI)
+
 library(duckdb)
+
+if (packageVersion("duckdb") < "1.0.99.9000") {
+  warning("`duckdb` versions smaller than 1.0.99.9000 have a bug \nin the export to hive partitioned parquet files \nwhich can result in invalid parquet datasets!")
+}
+
 library(tibble)
 
 ## Just for timing and other useful stuff in the report

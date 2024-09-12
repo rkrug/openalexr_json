@@ -3176,7 +3176,7 @@ Details at https://docs.openalex.org/api-entities/authors/limitations.</code></p
 </div>
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">toc</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>103.467 sec elapsed</code></pre>
+<pre><code>198.978 sec elapsed</code></pre>
 </div>
 </div>
 </section>
@@ -3200,25 +3200,25 @@ Details at https://docs.openalex.org/api-entities/authors/limitations.</code></p
 </div>
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">toc</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>104.04 sec elapsed</code></pre>
+<pre><code>105.41 sec elapsed</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">saveRDS</span>(x, <span class="at">file =</span> <span class="fu">file.path</span>(<span class="st">&quot;data&quot;</span>, <span class="st">&quot;data_from_fetch.rds&quot;</span>))</span>
 <span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>x</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 16,898 × 39
+<pre><code># A tibble: 16,935 × 39
    id     title display_name author ab    publication_date relevance_score so   
    &lt;chr&gt;  &lt;chr&gt; &lt;chr&gt;        &lt;list&gt; &lt;chr&gt; &lt;chr&gt;                      &lt;dbl&gt; &lt;chr&gt;
- 1 https… Accu… Accumulatio… &lt;df&gt;   &quot;One… 2009-07-27                 1112. Phil…
- 2 https… The … The Biodive… &lt;df&gt;   &quot;The… 2010-08-02                  784. PLoS…
- 3 https… Acce… Acceleratin… &lt;df&gt;   &quot;Coa… 2009-07-28                  747. Proc…
- 4 https… Plas… Plastics, t… &lt;df&gt;   &quot;Pla… 2009-07-27                  686. Phil…
- 5 https… Micr… Microplasti… &lt;df&gt;   &quot;Thi… 2012-03-02                  654. Envi…
+ 1 https… Accu… Accumulatio… &lt;df&gt;   &quot;One… 2009-07-27                 1113. Phil…
+ 2 https… The … The Biodive… &lt;df&gt;   &quot;The… 2010-08-02                  785. PLoS…
+ 3 https… Acce… Acceleratin… &lt;df&gt;   &quot;Coa… 2009-07-28                  748. Proc…
+ 4 https… Plas… Plastics, t… &lt;df&gt;   &quot;Pla… 2009-07-27                  689. Phil…
+ 5 https… Micr… Microplasti… &lt;df&gt;   &quot;Thi… 2012-03-02                  655. Envi…
  6 https… Fish… Fishes of t… &lt;df&gt;    &lt;NA&gt; 1987-08-01                  637. Fish…
- 7 https… The … The Product… &lt;df&gt;   &quot;Eco… 2007-07-27                  621. Scie…
- 8 https… Glob… Global impr… &lt;df&gt;   &quot;Res… 2013-08-04                  580. Natu…
- 9 https… Exti… Extinction … &lt;df&gt;   &quot;The… 2014-01-21                  564. eLife
+ 7 https… The … The Product… &lt;df&gt;   &quot;Eco… 2007-07-27                  622. Scie…
+ 8 https… Glob… Global impr… &lt;df&gt;   &quot;Res… 2013-08-04                  581. Natu…
+ 9 https… Exti… Extinction … &lt;df&gt;   &quot;The… 2014-01-21                  565. eLife
 10 https… Man … Man and the… &lt;df&gt;   &quot;The… 2011-08-01                  562. PLoS…
-# ℹ 16,888 more rows
+# ℹ 16,925 more rows
 # ℹ 31 more variables: so_id &lt;chr&gt;, host_organization &lt;chr&gt;, issn_l &lt;chr&gt;,
 #   url &lt;chr&gt;, pdf_url &lt;chr&gt;, license &lt;chr&gt;, version &lt;chr&gt;, first_page &lt;chr&gt;,
 #   last_page &lt;chr&gt;, volume &lt;chr&gt;, issue &lt;chr&gt;, is_oa &lt;lgl&gt;,
@@ -3338,7 +3338,7 @@ Details at https://docs.openalex.org/api-entities/authors/limitations.</code></p
 </div>
 <div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">toc</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>45.378 sec elapsed</code></pre>
+<pre><code>46.718 sec elapsed</code></pre>
 </div>
 </div>
 </section>
@@ -3352,11 +3352,11 @@ Details at https://docs.openalex.org/api-entities/authors/limitations.</code></p
 <span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">arrow_dir =</span> <span class="fu">file.path</span>(<span class="st">&quot;data&quot;</span>, <span class="st">&quot;data&quot;</span>)</span>
 <span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 0</code></pre>
+<pre><code>[1] 16935</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">toc</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>5.28 sec elapsed</code></pre>
+<pre><code>5.096 sec elapsed</code></pre>
 </div>
 </div>
 </section>
@@ -3370,24 +3370,24 @@ Details at https://docs.openalex.org/api-entities/authors/limitations.</code></p
 <span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a><span class="fu">save</span>(x, <span class="at">file =</span> <span class="fu">file.path</span>(<span class="st">&quot;data&quot;</span>, <span class="st">&quot;data_from_json.rds&quot;</span>))</span>
 <span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a><span class="fu">toc</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>13.475 sec elapsed</code></pre>
+<pre><code>14.362 sec elapsed</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>x</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 16,898 × 51
+<pre><code># A tibble: 16,935 × 51
    id                  doi   title display_name relevance_score publication_year
    &lt;chr&gt;               &lt;chr&gt; &lt;chr&gt; &lt;chr&gt;                  &lt;dbl&gt;            &lt;dbl&gt;
- 1 https://openalex.o… http… Accu… Accumulatio…           1112.             2009
- 2 https://openalex.o… http… The … The Biodive…            784.             2010
- 3 https://openalex.o… http… Acce… Acceleratin…            747.             2009
- 4 https://openalex.o… http… Plas… Plastics, t…            686.             2009
- 5 https://openalex.o… http… Micr… Microplasti…            654.             2012
+ 1 https://openalex.o… http… Accu… Accumulatio…           1113.             2009
+ 2 https://openalex.o… http… The … The Biodive…            785.             2010
+ 3 https://openalex.o… http… Acce… Acceleratin…            748.             2009
+ 4 https://openalex.o… http… Plas… Plastics, t…            689.             2009
+ 5 https://openalex.o… http… Micr… Microplasti…            655.             2012
  6 https://openalex.o… http… Fish… Fishes of t…            637.             1987
- 7 https://openalex.o… http… The … The Product…            621.             2007
- 8 https://openalex.o… http… Glob… Global impr…            580.             2013
- 9 https://openalex.o… http… Exti… Extinction …            564.             2014
+ 7 https://openalex.o… http… The … The Product…            622.             2007
+ 8 https://openalex.o… http… Glob… Global impr…            581.             2013
+ 9 https://openalex.o… http… Exti… Extinction …            565.             2014
 10 https://openalex.o… http… Man … Man and the…            562.             2011
-# ℹ 16,888 more rows
+# ℹ 16,925 more rows
 # ℹ 45 more variables: publication_date &lt;date&gt;, ids &lt;df[,5]&gt;, language &lt;chr&gt;,
 #   primary_location &lt;df[,9]&gt;, type &lt;chr&gt;, type_crossref &lt;chr&gt;,
 #   indexed_in &lt;list&gt;, open_access &lt;df[,4]&gt;, authorships &lt;list&gt;,
