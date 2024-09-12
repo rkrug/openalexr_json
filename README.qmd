@@ -52,17 +52,6 @@ dir.create(
 search_term <- '"deep sea" AND fishing' # about 18600 records
 ```
 
-## Set save function to dummy function
-```{r}
-#| label: set_save_function_dummy
-
-
-pages_save_function <- function(x, fn) {
-  NULL
-}
-```
-
-
 ## Run `openalexR::oa_fetch() first time aet caches
 ```{r}
 #| label: oa_fetch_throw_away
@@ -116,9 +105,6 @@ openalexR::oa_query(
   fulltext.search = search_term
 ) |>
   oa_request(
-    output_pages_to = "data",
-    pages_save_function = pages_save_function,
-    save_extension = ".json",
     json_dir = json_dir
   )
 toc()

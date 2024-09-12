@@ -3,9 +3,6 @@ oa_request <- function(
     per_page = 200,
     paging = "cursor",
     pages = NULL,
-    output_pages_to = NULL,
-    pages_save_function = saveRDS,
-    save_extension = ".rds",
     json_dir = NULL,
     count_only = FALSE,
     mailto = openalexR:::oa_email(),
@@ -55,7 +52,7 @@ oa_request <- function(
     if (verbose) cat("\nDownloading groups...\n|")
     while (!is.null(next_page)) {
       if (verbose) cat("=")
-      Sys.sleep(1 / 100)
+      Sys.sleep(1 / 10)
       query_ls[[paging]] <- next_page
       res <- api_request(query_url, ua, query = query_ls, json_dir = json_dir)
       if (!is.null(json_dir)) {
@@ -97,65 +94,42 @@ oa_request <- function(
     pb <- openalexR:::oa_progress(n = n_pages, text = "OpenAlex downloading")
   }
 
-  pb <- openalexR:::oa_progress(n = n_pages, text = "OpenAlex downloading")
-
-  # Setting items per page
-  query_ls[["per-page"]] <- per_page
-
-  # Setup output_pages_to if not NULL
-  if (!is.null(output_pages_to)) {
-    output_pages_to <- normalizePath(output_pages_to, mustWork = FALSE)
-    if (!dir.exists(output_pages_to)) {
-      dir.create(output_pages_to)
-    }
-    result <- character(n_pages)
-  }
-
   # Activation of cursor pagination
   data <- vector("list", length = n_pages)
   res <- NULL
   for (i in pages) {
     if (verbose) pb$tick()
-    Sys.sleep(1 / 100)
+    Sys.sleep(1 / 10)
     next_page <- openalexR:::get_next_page(paging, i, res)
     query_ls[[paging]] <- next_page
     res <- api_request(query_url, ua, query = query_ls, json_dir = json_dir)
-    next_page <- openalexR:::get_next_page(paging, i + 1, res)
-    if (!is.null(output_pages_to)) {
-      fn <- file.path(output_pages_to, paste0("set_", i, save_extension))
-      pages_save_function(
-        res$results,
-        fn
-      )
-      result[[i]] <- fn
-    } else {
-      if (!is.null(json_dir)) {
-        if (!is.null(res$results)) data[[i]] <- res$results
-      }
+    if (!is.null(json_dir)) {
+      if (!is.null(res[[result_name]])) data[[i]] <- res[[result_name]]
     }
   }
 
-  if (is.null(output_pages_to)) {
-    if (grepl("filter", query_url) && grepl("works", query_url)) {
-      truncated <- unlist(openalexR:::truncated_authors(data))
-      if (length(truncated)) {
-        truncated <- openalexR:::shorten_oaid(truncated)
-        warning(
-          "\nThe following work(s) have truncated lists of authors: ",
-          paste(truncated, collapse = ", "),
-          ".\nQuery each work separately by its identifier to get full list of authors.\n",
-          "For example:\n  ",
-          paste0(
-            "lapply(c(\"",
-            paste(utils::head(truncated, 2), collapse = "\", \""),
-            "\"), \\(x) oa_fetch(identifier = x))"
-          ),
-          "\nDetails at https://docs.openalex.org/api-entities/authors/limitations."
-        )
-      }
+  data <- unlist(data, recursive = FALSE)
+
+  if (grepl("filter", query_url) && grepl("works", query_url)) {
+    truncated <- unlist(openalexR:::truncated_authors(data))
+    if (length(truncated)) {
+      truncated <- openalexR:::shorten_oaid(truncated)
+      warning(
+        "\nThe following work(s) have truncated lists of authors: ",
+        paste(truncated, collapse = ", "),
+        ".\nQuery each work separately by its identifier to get full list of authors.\n",
+        "For example:\n  ",
+        paste0(
+          "lapply(c(\"",
+          paste(utils::head(truncated, 2), collapse = "\", \""),
+          "\"), \\(x) oa_fetch(identifier = x))"
+        ),
+        "\nDetails at https://docs.openalex.org/api-entities/authors/limitations."
+      )
     }
-    return(data)
-  } else {
-    return(result)
   }
+  if (!is.null(json_dir)) {
+    data <- json_dir
+  }
+  return(data)
 }

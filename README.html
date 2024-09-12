@@ -3114,22 +3114,28 @@ To suppress this message, add `openalexR.message = suppressed` to your .Renviron
 </div>
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="do">## For doing the conversion</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(DBI)</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(duckdb)</span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tibble)</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(duckdb)</span>
 <span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="do">## Just for timing and other useful stuff in the report</span></span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tictoc)</span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(knitr)</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="fu">packageVersion</span>(<span class="st">&quot;duckdb&quot;</span>) <span class="sc">&lt;</span> <span class="st">&quot;1.0.99.9000&quot;</span>) {</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">warning</span>(<span class="st">&quot;`duckdb` versions smaller than 1.0.99.9000 have a bug </span><span class="sc">\n</span><span class="st">in the export to hive partitioned parquet files </span><span class="sc">\n</span><span class="st">which can result in invalid parquet datasets!&quot;</span>)</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>}</span>
 <span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="fu">list.files</span>(</span>
-<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">path =</span> <span class="st">&quot;R&quot;</span>,</span>
-<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">pattern =</span> <span class="st">&quot;.R$&quot;</span>,</span>
-<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">full.names =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">recursive =</span> <span class="cn">FALSE</span></span>
-<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>) <span class="sc">|&gt;</span></span>
-<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">sapply</span>(</span>
-<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">FUN =</span> source</span>
-<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tibble)</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a><span class="do">## Just for timing and other useful stuff in the report</span></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tictoc)</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(knitr)</span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a><span class="fu">list.files</span>(</span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>  <span class="at">path =</span> <span class="st">&quot;R&quot;</span>,</span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>  <span class="at">pattern =</span> <span class="st">&quot;.R$&quot;</span>,</span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>  <span class="at">full.names =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>  <span class="at">recursive =</span> <span class="cn">FALSE</span></span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>) <span class="sc">|&gt;</span></span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">sapply</span>(</span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>    <span class="at">FUN =</span> source</span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>        R/api_request.R R/json_to_parquet.R R/json_to_tibble.R R/oa_request.R
 value   ?               ?                   ?                  ?             
@@ -3148,24 +3154,16 @@ visible FALSE           FALSE               FALSE              FALSE         </c
 <span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a><span class="co"># search_term &lt;- &#39;&quot;deep sea&quot; AND fishing AND illegal&#39; # about 2500 records</span></span>
 <span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>search_term <span class="ot">&lt;-</span> <span class="st">&#39;&quot;deep sea&quot; AND fishing&#39;</span> <span class="co"># about 18600 records</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<section id="set-save-function-to-dummy-function" class="level2">
-<h2 class="anchored" data-anchor-id="set-save-function-to-dummy-function">Set save function to dummy function</h2>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>pages_save_function <span class="ot">&lt;-</span> <span class="cf">function</span>(x, fn) {</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="cn">NULL</span></span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-</section>
 <section id="run-openalexroa_fetch-first-time-aet-caches" class="level2">
 <h2 class="anchored" data-anchor-id="run-openalexroa_fetch-first-time-aet-caches">Run `openalexR::oa_fetch() first time aet caches</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tic</span>()</span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> openalexR<span class="sc">::</span><span class="fu">oa_fetch</span>(</span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">entity =</span> <span class="st">&quot;works&quot;</span>,</span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">fulltext.search =</span> search_term,</span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">output =</span> <span class="st">&quot;tibble&quot;</span></span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tic</span>()</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> openalexR<span class="sc">::</span><span class="fu">oa_fetch</span>(</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">entity =</span> <span class="st">&quot;works&quot;</span>,</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">fulltext.search =</span> search_term,</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">output =</span> <span class="st">&quot;tibble&quot;</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Warning in oa_request(oa_query(filter = filter_i, multiple_id = multiple_id, : 
 The following work(s) have truncated lists of authors: W2088891049, W2970419732, W4250796065.
@@ -3174,22 +3172,22 @@ For example:
   lapply(c(&quot;W2088891049&quot;, &quot;W2970419732&quot;), \(x) oa_fetch(identifier = x))
 Details at https://docs.openalex.org/api-entities/authors/limitations.</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">toc</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">toc</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>198.978 sec elapsed</code></pre>
+<pre><code>117.372 sec elapsed</code></pre>
 </div>
 </div>
 </section>
 <section id="run-openalexroa_fetch-for-timing" class="level2">
 <h2 class="anchored" data-anchor-id="run-openalexroa_fetch-for-timing">Run `openalexR::oa_fetch() for timing</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tic</span>()</span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> openalexR<span class="sc">::</span><span class="fu">oa_fetch</span>(</span>
-<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">entity =</span> <span class="st">&quot;works&quot;</span>,</span>
-<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">fulltext.search =</span> search_term,</span>
-<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">output =</span> <span class="st">&quot;tibble&quot;</span></span>
-<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tic</span>()</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> openalexR<span class="sc">::</span><span class="fu">oa_fetch</span>(</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">entity =</span> <span class="st">&quot;works&quot;</span>,</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">fulltext.search =</span> search_term,</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">output =</span> <span class="st">&quot;tibble&quot;</span></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Warning in oa_request(oa_query(filter = filter_i, multiple_id = multiple_id, : 
 The following work(s) have truncated lists of authors: W2088891049, W2970419732, W4250796065.
@@ -3198,14 +3196,14 @@ For example:
   lapply(c(&quot;W2088891049&quot;, &quot;W2970419732&quot;), \(x) oa_fetch(identifier = x))
 Details at https://docs.openalex.org/api-entities/authors/limitations.</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">toc</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">toc</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>105.41 sec elapsed</code></pre>
+<pre><code>111.31 sec elapsed</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">saveRDS</span>(x, <span class="at">file =</span> <span class="fu">file.path</span>(<span class="st">&quot;data&quot;</span>, <span class="st">&quot;data_from_fetch.rds&quot;</span>))</span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>x</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">saveRDS</span>(x, <span class="at">file =</span> <span class="fu">file.path</span>(<span class="st">&quot;data&quot;</span>, <span class="st">&quot;data_from_fetch.rds&quot;</span>))</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>x</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 16,935 × 39
+<pre><code># A tibble: 16,950 × 39
    id     title display_name author ab    publication_date relevance_score so   
    &lt;chr&gt;  &lt;chr&gt; &lt;chr&gt;        &lt;list&gt; &lt;chr&gt; &lt;chr&gt;                      &lt;dbl&gt; &lt;chr&gt;
  1 https… Accu… Accumulatio… &lt;df&gt;   &quot;One… 2009-07-27                 1113. Phil…
@@ -3213,12 +3211,12 @@ Details at https://docs.openalex.org/api-entities/authors/limitations.</code></p
  3 https… Acce… Acceleratin… &lt;df&gt;   &quot;Coa… 2009-07-28                  748. Proc…
  4 https… Plas… Plastics, t… &lt;df&gt;   &quot;Pla… 2009-07-27                  689. Phil…
  5 https… Micr… Microplasti… &lt;df&gt;   &quot;Thi… 2012-03-02                  655. Envi…
- 6 https… Fish… Fishes of t… &lt;df&gt;    &lt;NA&gt; 1987-08-01                  637. Fish…
+ 6 https… Fish… Fishes of t… &lt;df&gt;    &lt;NA&gt; 1987-08-01                  638. Fish…
  7 https… The … The Product… &lt;df&gt;   &quot;Eco… 2007-07-27                  622. Scie…
  8 https… Glob… Global impr… &lt;df&gt;   &quot;Res… 2013-08-04                  581. Natu…
  9 https… Exti… Extinction … &lt;df&gt;   &quot;The… 2014-01-21                  565. eLife
 10 https… Man … Man and the… &lt;df&gt;   &quot;The… 2011-08-01                  562. PLoS…
-# ℹ 16,925 more rows
+# ℹ 16,940 more rows
 # ℹ 31 more variables: so_id &lt;chr&gt;, host_organization &lt;chr&gt;, issn_l &lt;chr&gt;,
 #   url &lt;chr&gt;, pdf_url &lt;chr&gt;, license &lt;chr&gt;, version &lt;chr&gt;, first_page &lt;chr&gt;,
 #   last_page &lt;chr&gt;, volume &lt;chr&gt;, issue &lt;chr&gt;, is_oa &lt;lgl&gt;,
@@ -3231,114 +3229,35 @@ Details at https://docs.openalex.org/api-entities/authors/limitations.</code></p
 <section id="get-the-records-as-json-files-as-returned-from-openalex" class="level2">
 <h2 class="anchored" data-anchor-id="get-the-records-as-json-files-as-returned-from-openalex">Get the records as JSON files as returned from OpenAlex</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tic</span>()</span>
-<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>json_dir <span class="ot">&lt;-</span> <span class="fu">file.path</span>(<span class="st">&quot;data&quot;</span>, <span class="st">&quot;json&quot;</span>)</span>
-<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a><span class="fu">dir.create</span>(</span>
-<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>  json_dir,</span>
-<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">recursive =</span> <span class="cn">TRUE</span></span>
-<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>openalexR<span class="sc">::</span><span class="fu">oa_query</span>(</span>
-<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">entity =</span> <span class="st">&quot;works&quot;</span>,</span>
-<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">fulltext.search =</span> search_term</span>
-<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a>) <span class="sc">|&gt;</span></span>
-<span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">oa_request</span>(</span>
-<span id="cb17-14"><a href="#cb17-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">output_pages_to =</span> <span class="st">&quot;data&quot;</span>,</span>
-<span id="cb17-15"><a href="#cb17-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">pages_save_function =</span> pages_save_function,</span>
-<span id="cb17-16"><a href="#cb17-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">save_extension =</span> <span class="st">&quot;.json&quot;</span>,</span>
-<span id="cb17-17"><a href="#cb17-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">json_dir =</span> json_dir</span>
-<span id="cb17-18"><a href="#cb17-18" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tic</span>()</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>json_dir <span class="ot">&lt;-</span> <span class="fu">file.path</span>(<span class="st">&quot;data&quot;</span>, <span class="st">&quot;json&quot;</span>)</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a><span class="fu">dir.create</span>(</span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>  json_dir,</span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">recursive =</span> <span class="cn">TRUE</span></span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>openalexR<span class="sc">::</span><span class="fu">oa_query</span>(</span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">entity =</span> <span class="st">&quot;works&quot;</span>,</span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">fulltext.search =</span> search_term</span>
+<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a>) <span class="sc">|&gt;</span></span>
+<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">oa_request</span>(</span>
+<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">json_dir =</span> json_dir</span>
+<span id="cb16-15"><a href="#cb16-15" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in oa_request(openalexR::oa_query(entity = &quot;works&quot;, fulltext.search = search_term), : 
+The following work(s) have truncated lists of authors: W2088891049, W2970419732, W4250796065.
+Query each work separately by its identifier to get full list of authors.
+For example:
+  lapply(c(&quot;W2088891049&quot;, &quot;W2970419732&quot;), \(x) oa_fetch(identifier = x))
+Details at https://docs.openalex.org/api-entities/authors/limitations.</code></pre>
+</div>
 <div class="cell-output cell-output-stdout">
-<pre><code> [1] &quot;/Users/rainerkrug/Documents_Local/git/openalexjson/data/set_1.json&quot; 
- [2] &quot;/Users/rainerkrug/Documents_Local/git/openalexjson/data/set_2.json&quot; 
- [3] &quot;/Users/rainerkrug/Documents_Local/git/openalexjson/data/set_3.json&quot; 
- [4] &quot;/Users/rainerkrug/Documents_Local/git/openalexjson/data/set_4.json&quot; 
- [5] &quot;/Users/rainerkrug/Documents_Local/git/openalexjson/data/set_5.json&quot; 
- [6] &quot;/Users/rainerkrug/Documents_Local/git/openalexjson/data/set_6.json&quot; 
- [7] &quot;/Users/rainerkrug/Documents_Local/git/openalexjson/data/set_7.json&quot; 
- [8] &quot;/Users/rainerkrug/Documents_Local/git/openalexjson/data/set_8.json&quot; 
- [9] &quot;/Users/rainerkrug/Documents_Local/git/openalexjson/data/set_9.json&quot; 
-[10] &quot;/Users/rainerkrug/Documents_Local/git/openalexjson/data/set_10.json&quot;
-[11] &quot;/Users/rainerkrug/Documents_Local/git/openalexjson/data/set_11.json&quot;
-[12] &quot;/Users/rainerkrug/Documents_Local/git/openalexjson/data/set_12.json&quot;
-[13] &quot;/Users/rainerkrug/Documents_Local/git/openalexjson/data/set_13.json&quot;
-[14] &quot;/Users/rainerkrug/Documents_Local/git/openalexjson/data/set_14.json&quot;
-[15] &quot;/Users/rainerkrug/Documents_Local/git/openalexjson/data/set_15.json&quot;
-[16] &quot;/Users/rainerkrug/Documents_Local/git/openalexjson/data/set_16.json&quot;
-[17] &quot;/Users/rainerkrug/Documents_Local/git/openalexjson/data/set_17.json&quot;
-[18] &quot;/Users/rainerkrug/Documents_Local/git/openalexjson/data/set_18.json&quot;
-[19] &quot;/Users/rainerkrug/Documents_Local/git/openalexjson/data/set_19.json&quot;
-[20] &quot;/Users/rainerkrug/Documents_Local/git/openalexjson/data/set_20.json&quot;
-[21] &quot;/Users/rainerkrug/Documents_Local/git/openalexjson/data/set_21.json&quot;
-[22] &quot;/Users/rainerkrug/Documents_Local/git/openalexjson/data/set_22.json&quot;
-[23] &quot;/Users/rainerkrug/Documents_Local/git/openalexjson/data/set_23.json&quot;
-[24] &quot;/Users/rainerkrug/Documents_Local/git/openalexjson/data/set_24.json&quot;
-[25] &quot;/Users/rainerkrug/Documents_Local/git/openalexjson/data/set_25.json&quot;
-[26] &quot;/Users/rainerkrug/Documents_Local/git/openalexjson/data/set_26.json&quot;
-[27] &quot;/Users/rainerkrug/Documents_Local/git/openalexjson/data/set_27.json&quot;
-[28] &quot;/Users/rainerkrug/Documents_Local/git/openalexjson/data/set_28.json&quot;
-[29] &quot;/Users/rainerkrug/Documents_Local/git/openalexjson/data/set_29.json&quot;
-[30] &quot;/Users/rainerkrug/Documents_Local/git/openalexjson/data/set_30.json&quot;
-[31] &quot;/Users/rainerkrug/Documents_Local/git/openalexjson/data/set_31.json&quot;
-[32] &quot;/Users/rainerkrug/Documents_Local/git/openalexjson/data/set_32.json&quot;
-[33] &quot;/Users/rainerkrug/Documents_Local/git/openalexjson/data/set_33.json&quot;
-[34] &quot;/Users/rainerkrug/Documents_Local/git/openalexjson/data/set_34.json&quot;
-[35] &quot;/Users/rainerkrug/Documents_Local/git/openalexjson/data/set_35.json&quot;
-[36] &quot;/Users/rainerkrug/Documents_Local/git/openalexjson/data/set_36.json&quot;
-[37] &quot;/Users/rainerkrug/Documents_Local/git/openalexjson/data/set_37.json&quot;
-[38] &quot;/Users/rainerkrug/Documents_Local/git/openalexjson/data/set_38.json&quot;
-[39] &quot;/Users/rainerkrug/Documents_Local/git/openalexjson/data/set_39.json&quot;
-[40] &quot;/Users/rainerkrug/Documents_Local/git/openalexjson/data/set_40.json&quot;
-[41] &quot;/Users/rainerkrug/Documents_Local/git/openalexjson/data/set_41.json&quot;
-[42] &quot;/Users/rainerkrug/Documents_Local/git/openalexjson/data/set_42.json&quot;
-[43] &quot;/Users/rainerkrug/Documents_Local/git/openalexjson/data/set_43.json&quot;
-[44] &quot;/Users/rainerkrug/Documents_Local/git/openalexjson/data/set_44.json&quot;
-[45] &quot;/Users/rainerkrug/Documents_Local/git/openalexjson/data/set_45.json&quot;
-[46] &quot;/Users/rainerkrug/Documents_Local/git/openalexjson/data/set_46.json&quot;
-[47] &quot;/Users/rainerkrug/Documents_Local/git/openalexjson/data/set_47.json&quot;
-[48] &quot;/Users/rainerkrug/Documents_Local/git/openalexjson/data/set_48.json&quot;
-[49] &quot;/Users/rainerkrug/Documents_Local/git/openalexjson/data/set_49.json&quot;
-[50] &quot;/Users/rainerkrug/Documents_Local/git/openalexjson/data/set_50.json&quot;
-[51] &quot;/Users/rainerkrug/Documents_Local/git/openalexjson/data/set_51.json&quot;
-[52] &quot;/Users/rainerkrug/Documents_Local/git/openalexjson/data/set_52.json&quot;
-[53] &quot;/Users/rainerkrug/Documents_Local/git/openalexjson/data/set_53.json&quot;
-[54] &quot;/Users/rainerkrug/Documents_Local/git/openalexjson/data/set_54.json&quot;
-[55] &quot;/Users/rainerkrug/Documents_Local/git/openalexjson/data/set_55.json&quot;
-[56] &quot;/Users/rainerkrug/Documents_Local/git/openalexjson/data/set_56.json&quot;
-[57] &quot;/Users/rainerkrug/Documents_Local/git/openalexjson/data/set_57.json&quot;
-[58] &quot;/Users/rainerkrug/Documents_Local/git/openalexjson/data/set_58.json&quot;
-[59] &quot;/Users/rainerkrug/Documents_Local/git/openalexjson/data/set_59.json&quot;
-[60] &quot;/Users/rainerkrug/Documents_Local/git/openalexjson/data/set_60.json&quot;
-[61] &quot;/Users/rainerkrug/Documents_Local/git/openalexjson/data/set_61.json&quot;
-[62] &quot;/Users/rainerkrug/Documents_Local/git/openalexjson/data/set_62.json&quot;
-[63] &quot;/Users/rainerkrug/Documents_Local/git/openalexjson/data/set_63.json&quot;
-[64] &quot;/Users/rainerkrug/Documents_Local/git/openalexjson/data/set_64.json&quot;
-[65] &quot;/Users/rainerkrug/Documents_Local/git/openalexjson/data/set_65.json&quot;
-[66] &quot;/Users/rainerkrug/Documents_Local/git/openalexjson/data/set_66.json&quot;
-[67] &quot;/Users/rainerkrug/Documents_Local/git/openalexjson/data/set_67.json&quot;
-[68] &quot;/Users/rainerkrug/Documents_Local/git/openalexjson/data/set_68.json&quot;
-[69] &quot;/Users/rainerkrug/Documents_Local/git/openalexjson/data/set_69.json&quot;
-[70] &quot;/Users/rainerkrug/Documents_Local/git/openalexjson/data/set_70.json&quot;
-[71] &quot;/Users/rainerkrug/Documents_Local/git/openalexjson/data/set_71.json&quot;
-[72] &quot;/Users/rainerkrug/Documents_Local/git/openalexjson/data/set_72.json&quot;
-[73] &quot;/Users/rainerkrug/Documents_Local/git/openalexjson/data/set_73.json&quot;
-[74] &quot;/Users/rainerkrug/Documents_Local/git/openalexjson/data/set_74.json&quot;
-[75] &quot;/Users/rainerkrug/Documents_Local/git/openalexjson/data/set_75.json&quot;
-[76] &quot;/Users/rainerkrug/Documents_Local/git/openalexjson/data/set_76.json&quot;
-[77] &quot;/Users/rainerkrug/Documents_Local/git/openalexjson/data/set_77.json&quot;
-[78] &quot;/Users/rainerkrug/Documents_Local/git/openalexjson/data/set_78.json&quot;
-[79] &quot;/Users/rainerkrug/Documents_Local/git/openalexjson/data/set_79.json&quot;
-[80] &quot;/Users/rainerkrug/Documents_Local/git/openalexjson/data/set_80.json&quot;
-[81] &quot;/Users/rainerkrug/Documents_Local/git/openalexjson/data/set_81.json&quot;
-[82] &quot;/Users/rainerkrug/Documents_Local/git/openalexjson/data/set_82.json&quot;
-[83] &quot;/Users/rainerkrug/Documents_Local/git/openalexjson/data/set_83.json&quot;
-[84] &quot;/Users/rainerkrug/Documents_Local/git/openalexjson/data/set_84.json&quot;
-[85] &quot;/Users/rainerkrug/Documents_Local/git/openalexjson/data/set_85.json&quot;</code></pre>
+<pre><code>[1] &quot;data/json&quot;</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">toc</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>46.718 sec elapsed</code></pre>
+<pre><code>55.683 sec elapsed</code></pre>
 </div>
 </div>
 </section>
@@ -3352,11 +3271,11 @@ Details at https://docs.openalex.org/api-entities/authors/limitations.</code></p
 <span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">arrow_dir =</span> <span class="fu">file.path</span>(<span class="st">&quot;data&quot;</span>, <span class="st">&quot;data&quot;</span>)</span>
 <span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 16935</code></pre>
+<pre><code>[1] 16950</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">toc</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>5.096 sec elapsed</code></pre>
+<pre><code>4.331 sec elapsed</code></pre>
 </div>
 </div>
 </section>
@@ -3370,11 +3289,11 @@ Details at https://docs.openalex.org/api-entities/authors/limitations.</code></p
 <span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a><span class="fu">save</span>(x, <span class="at">file =</span> <span class="fu">file.path</span>(<span class="st">&quot;data&quot;</span>, <span class="st">&quot;data_from_json.rds&quot;</span>))</span>
 <span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a><span class="fu">toc</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>14.362 sec elapsed</code></pre>
+<pre><code>14.717 sec elapsed</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>x</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 16,935 × 51
+<pre><code># A tibble: 16,950 × 51
    id                  doi   title display_name relevance_score publication_year
    &lt;chr&gt;               &lt;chr&gt; &lt;chr&gt; &lt;chr&gt;                  &lt;dbl&gt;            &lt;dbl&gt;
  1 https://openalex.o… http… Accu… Accumulatio…           1113.             2009
@@ -3382,12 +3301,12 @@ Details at https://docs.openalex.org/api-entities/authors/limitations.</code></p
  3 https://openalex.o… http… Acce… Acceleratin…            748.             2009
  4 https://openalex.o… http… Plas… Plastics, t…            689.             2009
  5 https://openalex.o… http… Micr… Microplasti…            655.             2012
- 6 https://openalex.o… http… Fish… Fishes of t…            637.             1987
+ 6 https://openalex.o… http… Fish… Fishes of t…            638.             1987
  7 https://openalex.o… http… The … The Product…            622.             2007
  8 https://openalex.o… http… Glob… Global impr…            581.             2013
  9 https://openalex.o… http… Exti… Extinction …            565.             2014
 10 https://openalex.o… http… Man … Man and the…            562.             2011
-# ℹ 16,925 more rows
+# ℹ 16,940 more rows
 # ℹ 45 more variables: publication_date &lt;date&gt;, ids &lt;df[,5]&gt;, language &lt;chr&gt;,
 #   primary_location &lt;df[,9]&gt;, type &lt;chr&gt;, type_crossref &lt;chr&gt;,
 #   indexed_in &lt;list&gt;, open_access &lt;df[,4]&gt;, authorships &lt;list&gt;,
